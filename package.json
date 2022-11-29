@@ -1,0 +1,18 @@
+{
+	"type": "module",
+	"name": "@intrnl/iterable-reader",
+	"description": "Convert Uint8Array iterables to Go-like Reader interface",
+	"version": "0.1.1",
+	"author": "intrnl",
+	"license": "MIT",
+	"repository": {
+		"url": "https://codeberg.org/intrnl/iterable-reader"
+	},
+	"files": [
+		"src/"
+	],
+	"main": "src/index.js",
+	"dependencies": {
+		"yocto-queue": "^1.0.0"
+	}
+}
