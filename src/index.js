@@ -88,8 +88,6 @@ export function createIterableReader (iterable) {
 			while (size < n) {
 				let result = await iterator.next();
 
-				// we don't want to set the `done` var here, we could have remaining
-				// bytes that have yet to be read.
 				if (result.done) {
 					break;
 				}
