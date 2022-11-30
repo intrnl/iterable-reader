@@ -5,7 +5,7 @@
 
 /**
  * @typedef {object} Seeker
- * @property {(offset: number, whence?: SeekMode) => Promise<number>} seek
+ * @property {(offset: number, whence: SeekMode) => Promise<number>} seek
  */
 
 /**
@@ -93,7 +93,7 @@ export function createIterableReader (iterable) {
 
 			return p.byteLength - unwritten;
 		},
-		async seek (n, whence = SeekMode.Current) {
+		async seek (n, whence) {
 			if (whence !== SeekMode.Current) {
 				throw new Error(`unsupported seek mode`);
 			}
