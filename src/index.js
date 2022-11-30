@@ -17,8 +17,6 @@
 /** @typedef {Reader & Closer} ReadCloser */
 /** @typedef {Reader & Seeker & Closer} ReadSeekCloser */
 
-import Queue from 'yocto-queue';
-
 /**
  * @param {Iterable<Uint8Array> | AsyncIterable<Uint8Array>} iterable
  * @returns {ReadSeekCloser}
@@ -28,8 +26,8 @@ export function createIterableReader (iterable) {
 		? iterable[Symbol.asyncIterator]()
 		: iterable[Symbol.iterator]();
 
-	/** @type {Queue<Uint8Array>} */
-	let pages = new Queue();
+	/** @type {Uint8Array[]} */
+	let pages = [];
 	let buffer = new Uint8Array(0);
 
 	let ptr = 0;
@@ -51,11 +49,11 @@ export function createIterableReader (iterable) {
 				size += length;
 				read += length;
 
-				pages.enqueue(chunk);
+				pages.push(chunk);
 			}
 
 			if (size < 1) {
-				pages.clear();
+				pages = [];
 				buffer = new Uint8Array(0);
 				return null;
 			}
@@ -73,11 +71,11 @@ export function createIterableReader (iterable) {
 				size -= length;
 
 				if (ptr >= buffer.length) {
-					if (pages.size < 1) {
+					if (pages.length < 1) {
 						break;
 					}
 
-					buffer = pages.dequeue();
+					buffer = pages.shift();
 					ptr = 0;
 				}
 			}
@@ -98,7 +96,7 @@ export function createIterableReader (iterable) {
 				size += length;
 				read += length;
 
-				pages.enqueue(chunk);
+				pages.push(chunk);
 			}
 
 			ptr += n;
@@ -107,14 +105,13 @@ export function createIterableReader (iterable) {
 
 			while (ptr >= buffer.byteLength && pages.length > 0) {
 				ptr -= buffer.byteLength;
-				buffer = pages.dequeue();
+				buffer = pages.shift();
 			}
 
 			return read;
 		},
 		close () {
 			iterator.return();
-			done = true;
 		},
 	};
 }

@@ -11,8 +11,5 @@
 	"files": [
 		"src/"
 	],
-	"main": "src/index.js",
-	"dependencies": {
-		"yocto-queue": "^1.0.0"
-	}
+	"main": "src/index.js"
 }
