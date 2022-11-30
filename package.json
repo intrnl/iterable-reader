@@ -2,7 +2,7 @@
 	"type": "module",
 	"name": "@intrnl/iterable-reader",
 	"description": "Convert Uint8Array iterables to Go-like Reader interface",
-	"version": "0.1.2",
+	"version": "0.2.0",
 	"author": "intrnl",
 	"license": "MIT",
 	"repository": {
