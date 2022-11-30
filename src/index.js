@@ -5,7 +5,7 @@
 
 /**
  * @typedef {object} Seeker
- * @property {(offset: number) => Promise<number>} seek
+ * @property {(offset: number, whence?: SeekMode) => Promise<number>} seek
  */
 
 /**
@@ -16,6 +16,17 @@
 /** @typedef {Reader & Seeker} ReadSeeker */
 /** @typedef {Reader & Closer} ReadCloser */
 /** @typedef {Reader & Seeker & Closer} ReadSeekCloser */
+
+/**
+ * An enum which defines the seek mode for IO related APIs that support seeking.
+ * @readonly
+ * @enum {number}
+ */
+export let SeekMode = {
+	Current: 1,
+	End: 2,
+	Start: 0,
+};
 
 /**
  * @param {Iterable<Uint8Array> | AsyncIterable<Uint8Array>} iterable
@@ -82,7 +93,11 @@ export function createIterableReader (iterable) {
 
 			return p.byteLength - unwritten;
 		},
-		async seek (n) {
+		async seek (n, whence = SeekMode.Current) {
+			if (whence !== SeekMode.Current) {
+				throw new Error(`unsupported seek mode`);
+			}
+
 			while (size < n) {
 				let result = await iterator.next();
 
