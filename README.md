@@ -20,26 +20,26 @@ async iterator, in the meantime, you could use this to convert them into one.
 
 ```js
 function createStreamIterator (stream) {
-	// return if browser already supports async iterator in stream
-	if (Symbol.asyncIterator in stream) {
-		return stream[Symbol.asyncIterator]();
-	}
+  // return if browser already supports async iterator in stream
+  if (Symbol.asyncIterator in stream) {
+    return stream[Symbol.asyncIterator]();
+  }
 
-	let reader = stream.getReader();
+  let reader = stream.getReader();
 
-	return {
-		[Symbol.asyncIterator] () {
-			return this;
-		},
-		next () {
-			return reader.read();
-		},
-		return () {
-			reader.releaseLock();
-		},
-		throw () {
-			reader.releaseLock();
-		},
-	};
+  return {
+    [Symbol.asyncIterator] () {
+      return this;
+    },
+    next () {
+      return reader.read();
+    },
+    return () {
+      reader.releaseLock();
+    },
+    throw () {
+      reader.releaseLock();
+    },
+  };
 }
 ```
